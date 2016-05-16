@@ -1,0 +1,46 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "outDir": "public/js",
+        "inlineSourceMap": false,
+        "sourceMap": true
+    },
+    "filesGlob": [
+        "**/*.ts",
+        "**/*.tsx",
+        "!node_modules/**"
+    ],
+    "files": [
+        "src/app.ts",
+        "src/pages/NewQCM/new_qcm.directive.ts",
+        "src/services/qcm-levels.ts",
+        "src/services/qcm-levels0.ts",
+        "src/services/qcm.ts",
+        "typings/browser.d.ts",
+        "typings/browser/ambient/angular-material/index.d.ts",
+        "typings/browser/ambient/angular-ui-router/index.d.ts",
+        "typings/browser/ambient/angular/index.d.ts",
+        "typings/browser/ambient/angularfire/index.d.ts",
+        "typings/browser/ambient/firebase/index.d.ts",
+        "typings/main.d.ts",
+        "typings/main/ambient/angular-material/index.d.ts",
+        "typings/main/ambient/angular-ui-router/index.d.ts",
+        "typings/main/ambient/angular/index.d.ts",
+        "typings/main/ambient/angularfire/index.d.ts",
+        "typings/main/ambient/firebase/index.d.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

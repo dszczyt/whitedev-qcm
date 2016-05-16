@@ -1,0 +1,20 @@
+<div layout="row">
+  <div class="flex-66" flex-offset="20">
+    <div layout="row" layout-align="space-between center">
+      <md-input-container flex>
+        <label>Thème</label>
+        <md-select placeholder="Theme" ng-model="vm.theme">
+          <md-option ng-value="key" ng-repeat="(key, theme) in vm.themes">{{ theme }}</md-option>
+        </md-select>
+      </md-input-container>
+      <md-input-container flex>
+        <label>Niveau</label>
+        <md-select placeholder="Niveau" ng-model="vm.level">
+          <md-option ng-value="key" ng-repeat="(key, level) in vm.levels">{{ level }}</md-option>
+        </md-select>
+      </md-input-container>
+    </div>
+
+    <ui-view></ui-view>
+  </div>
+</div>

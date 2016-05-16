@@ -1,0 +1,25 @@
+{
+  "name": "qcm-whitedev",
+  "authors": [
+    "Damien Szczyt <damien.szczyt@geniustrade.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.5",
+    "angularfire": "^1.2.0",
+    "angular-material": "^1.0.8",
+    "angular-ui-router": "ui-router#^0.3.0",
+    "requirejs": "^2.2.0"
+  }
+}
