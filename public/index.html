@@ -9,9 +9,9 @@
     <div layout="row" flex>
       <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
         <md-content>
-          <ul>
-            <li><a href ui-sref="qcm">Saisie des QCM</a></li>
-            <li><a href ui-sref="qcm.list">Liste des questions</a></li>
+          <md-list>
+            <md-list-item ui-sref="qcm.edit">Saisie des QCM</md-list-item>
+            <md-list-item ui-sref="qcm.list">Liste des questions</md-list-item>
           </ul>
         </md-content>
       </md-sidenav>
@@ -33,6 +33,7 @@
   <script src="/js/services/qcm.js" type="text/javascript"></script>
   <script src="/js/services/qcm-themes.js" type="text/javascript"></script>
   <script src="/js/services/qcm-levels.js" type="text/javascript"></script>
+  <script src="/js/services/qcm-select.js" type="text/javascript"></script>
   <script src="/js/pages/NewQCM/new_qcm.directive.js" type="text/javascript"></script>
 </body>
 </html>

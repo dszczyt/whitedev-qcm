@@ -23,9 +23,13 @@
     ],
     "files": [
         "src/app.ts",
+        "src/models/choice.ts",
+        "src/models/qcm.ts",
+        "src/models/question.ts",
         "src/pages/NewQCM/new_qcm.directive.ts",
         "src/services/qcm-levels.ts",
-        "src/services/qcm-levels0.ts",
+        "src/services/qcm-select.ts",
+        "src/services/qcm-themes.ts",
         "src/services/qcm.ts",
         "typings/browser.d.ts",
         "typings/browser/ambient/angular-material/index.d.ts",
@@ -33,12 +37,14 @@
         "typings/browser/ambient/angular/index.d.ts",
         "typings/browser/ambient/angularfire/index.d.ts",
         "typings/browser/ambient/firebase/index.d.ts",
+        "typings/index.d.ts",
         "typings/main.d.ts",
         "typings/main/ambient/angular-material/index.d.ts",
         "typings/main/ambient/angular-ui-router/index.d.ts",
         "typings/main/ambient/angular/index.d.ts",
         "typings/main/ambient/angularfire/index.d.ts",
-        "typings/main/ambient/firebase/index.d.ts"
+        "typings/main/ambient/firebase/index.d.ts",
+        "typings/modules/lodash/index.d.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

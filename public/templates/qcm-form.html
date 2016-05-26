@@ -1,27 +1,25 @@
-<form ng-submit="vm.save()">
-  <md-card layout-padding ng-repeat="question in vm.qcm.questions track by $index" ng-form="questionForm" class="md-whiteframe-z1">
-    <md-card-content>
-      <md-input-container layout-fill>
+<form ng-submit="$ctrl.onSubmit()">
+  <md-card layout-padding ng-repeat="question in $ctrl.qcm.questions track by $index" ng-form="questionForm" class="md-whiteframe-z1">
+    <md-card-content layout="column" layout-align="space-between top">
+      <md-input-container layout-fill flex>
         <label>Intitulé de la question {{ $index + 1 }}</label>
         <textarea ng-model="question.content" ng-required></textarea>
       </md-input-container>
 
-      <md-content layout="column" layout-align="space-between top">
-        <div ng-repeat="answer in question.answers track by $index" ng-form="answerForm" layout-fill flex layout="row" layout-align="center center">
-          <md-input-container flex>
-            <label>Réponse {{ $index + 1 }}</label>
-            <textarea ng-model="answer.content" ng-required></textarea>
-          </md-input-container>
-          <md-checkbox type="checkbox" ng-model="answer.correct" aria-label="Correct"></md-checkbox>
-          <md-button class="md-raised" ng-click="vm.deleteResponse(question, $index)">Supprimer</md-button>
-        </div>
-      </md-content>
+      <div ng-repeat="answer in question.answers track by $index" ng-form="answerForm" layout-fill flex layout="row" layout-align="center center">
+        <md-input-container flex>
+          <label>Réponse {{ $index + 1 }}</label>
+          <textarea ng-model="answer.content" ng-required></textarea>
+        </md-input-container>
+        <md-checkbox type="checkbox" ng-model="answer.correct" aria-label="Correct"></md-checkbox>
+        <md-button class="md-raised" ng-click="$ctrl.deleteResponse(question, $index)">Supprimer</md-button>
+      </div>
     </md-card-content>
     <md-card-actions>
-      <md-button ng-click="vm.newAnswer(question)" type="button" class="md-raised">Nouvelle réponse</md-button>
-      <md-button ng-click="vm.deleteQuestion($index)" type="button" class="md-raised">Supprimer la question</md-button>
+      <md-button ng-click="$ctrl.newAnswer(question)" type="button" class="md-raised">Nouvelle réponse</md-button>
+      <md-button ng-click="$ctrl.deleteQuestion($index)" type="button" class="md-raised">Supprimer la question</md-button>
     </md-card-actions>
   </md-card>
-  <md-button ng-click="vm.newQuestion()" type="button" class="md-raised">Nouvelle question</md-button>
+  <md-button ng-click="$ctrl.newQuestion()" type="button" class="md-raised">Nouvelle question</md-button>
   <md-button class="md-raised md-primary" type="submit">Sauver le questionnaire</md-button>
 </form>

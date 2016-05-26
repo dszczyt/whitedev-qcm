@@ -5,5 +5,8 @@
     "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160514162931",
     "angularfire": "registry:dt/angularfire#0.8.2+20160316155526",
     "firebase": "registry:dt/firebase#2.4.1+20160412125105"
+  },
+  "dependencies": {
+    "lodash": "registry:npm/lodash#4.0.0+20160416211519"
   }
 }

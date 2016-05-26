@@ -5,13 +5,13 @@ angular.module("qcm")
         name: "qcm",
         url: "/admin/qcm",
         templateUrl: "/templates/qcm-select.html",
-        controller: function ($scope, fbQcmThemes, fbQcmLevels, $state) {
-            var _this = this;
+        controller: function ($scope, fbQcmThemes, fbQcmLevels, $state, $stateParams, qcmSelect) {
             this.themes = fbQcmThemes;
             this.levels = fbQcmLevels;
-            $scope.$watchGroup(["vm.theme", "vm.level"], function () {
-                $state.go("qcm.edit", { theme: _this.theme, level: _this.level });
-            });
+            this.qcmSelect = qcmSelect;
+            this.updateState = function () {
+                $state.go(".", qcmSelect);
+            };
         },
         controllerAs: "vm",
         resolve: {
@@ -25,7 +25,7 @@ angular.module("qcm")
     })
         .state({
         name: "qcm.list",
-        url: "/list",
+        url: "/list?:theme&:level",
         templateUrl: "/templates/qcm-list.html",
         controller: function (qcmList) {
             this.qcmList = qcmList;
@@ -39,12 +39,16 @@ angular.module("qcm")
     })
         .state({
         name: "qcm.edit",
-        url: "/:theme/:level",
-        template: "<qcm-form qcm=\"vm.qcm\"></qcm-form>",
-        controller: function (qcm, $scope, $stateParams) {
+        url: "/edit?:theme&:level",
+        template: "<qcm-form qcm=\"vm.qcm\" on-submit=\"vm.save()\"></qcm-form>",
+        controller: function (qcm, $scope) {
+            var _this = this;
             this.qcm = qcm;
-            $scope.$parent.vm.theme = $stateParams.theme;
-            $scope.$parent.vm.level = $stateParams.level || "debutant";
+            this.saving = false;
+            this.save = function () {
+                _this.saving = true;
+                _this.qcm.$save().then(function () { _this.saving = false; });
+            };
         },
         controllerAs: "vm",
         resolve: {
@@ -54,44 +58,39 @@ angular.module("qcm")
         }
     });
 })
-    .directive("qcmForm", function () {
-    return {
-        restrict: "E",
-        templateUrl: "/templates/qcm-form.html",
-        scope: {
-            qcm: "="
-        },
-        controller: function ($scope, $stateParams) {
-            var _this = this;
-            this.theme = $stateParams.theme;
-            this.level = $stateParams.level;
-            this.saving = false;
-            this.save = function () {
-                _this.saving = false;
-                _this.qcm.$save().then(function () {
-                    _this.saving = false;
-                });
-            };
-            this.newQuestion = function () {
-                if (_this.qcm.questions === undefined) {
-                    _this.qcm.questions = [];
-                }
-                _this.qcm.questions.push({});
-            };
-            this.deleteResponse = function (question, idx) {
-                question.answers.splice(idx, 1);
-            };
-            this.deleteQuestion = function (idx) {
-                _this.qcm.questions.splice(idx, 1);
-            };
-            this.newAnswer = function (question) {
-                if (question.answers === undefined)
-                    question.answers = [];
-                question.answers.push({});
-            };
-        },
-        controllerAs: "vm",
-        bindToController: true
-    };
+    .component("qcmForm", {
+    templateUrl: "/templates/qcm-form.html",
+    bindings: {
+        qcm: "<",
+        onSubmit: "&"
+    },
+    controller: function ($scope, $stateParams) {
+        var _this = this;
+        this.newQuestion = function () {
+            if (_this.qcm.questions === undefined) {
+                _this.qcm.questions = [];
+            }
+            _this.qcm.questions.push({});
+        };
+        this.deleteResponse = function (question, idx) {
+            question.answers.splice(idx, 1);
+        };
+        this.deleteQuestion = function (idx) {
+            _this.qcm.questions.splice(idx, 1);
+        };
+        this.newAnswer = function (question) {
+            if (question.answers === undefined)
+                question.answers = [];
+            question.answers.push({});
+        };
+    }
+})
+    .run(function ($rootScope, $state, $stateParams, qcmSelect) {
+    $rootScope.$on("$stateChangeSuccess", function () {
+        if ($state.includes("qcm")) {
+            qcmSelect.theme = $stateParams.theme;
+            qcmSelect.level = $stateParams.level;
+        }
+    });
 });
 //# sourceMappingURL=new_qcm.directive.js.map
