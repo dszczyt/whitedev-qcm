@@ -40,9 +40,10 @@ angular.module("qcm")
         .state({
         name: "qcm.edit",
         url: "/edit?:theme&:level",
-        template: "<qcm-form qcm=\"vm.qcm\" on-submit=\"vm.save()\"></qcm-form>",
-        controller: function (qcm, $scope) {
+        template: "<qcm-form qcm=\"vm.qcm\" on-submit=\"vm.save()\" ng-if=\"vm.qcmSelect.theme && vm.qcmSelect.level\"></qcm-form>",
+        controller: function (qcm, $scope, qcmSelect) {
             var _this = this;
+            this.qcmSelect = qcmSelect;
             this.qcm = qcm;
             this.saving = false;
             this.save = function () {
@@ -52,8 +53,8 @@ angular.module("qcm")
         },
         controllerAs: "vm",
         resolve: {
-            qcm: function ($firebaseObject, $stateParams) {
-                return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/qcm/" + $stateParams.theme + "/" + $stateParams.level));
+            qcm: function ($firebaseObject, $stateParams, qcmSelect) {
+                return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/qcm/" + qcmSelect.theme + "/" + qcmSelect.level));
             }
         }
     });
