@@ -1,4 +1,4 @@
-<form ng-submit="$ctrl.onSubmit()">
+<form ng-submit="$ctrl.onSubmit({qcm: $ctrl.qcm})">
   <md-card layout-padding ng-repeat="question in $ctrl.qcm.questions track by $index" ng-form="questionForm" class="md-whiteframe-z1">
     <md-card-content layout="column" layout-align="space-between top">
       <md-input-container layout-fill flex>

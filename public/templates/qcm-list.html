@@ -1,9 +1,10 @@
-<div ng-repeat="(theme, levels) in vm.qcmList">
-  <h2>{{ theme }}</h2>
-  <div ng-repeat="(level, qcm) in levels">
-    <h3>{{ level }}</h3>
-    <ul>
-      <li ng-repeat="question in qcm.questions">{{ question.content }}</li>
-    </ul>
+<md-content style="height: 300px;">
+  <div ng-repeat="(theme, levels) in $resolve.qcmList">
+    <section ng-repeat="(level, qcm) in levels">
+      <md-subheader>{{ theme }} &mdash; {{ level }}</md-subheader>
+      <md-card ng-repeat="question in qcm.questions">
+        <md-card-content>{{ question.content }}</md-card-content>
+      </md-card>
+    </section>
   </div>
-</div>
+</md-content>

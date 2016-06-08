@@ -1,20 +1,14 @@
-<div layout="row">
-  <div class="flex-66" flex-offset="20">
-    <div layout="row" layout-align="space-between center">
-      <md-input-container flex>
-        <label>Thème</label>
-        <md-select placeholder="Theme" ng-model="vm.qcmSelect.theme" ng-change="vm.updateState()">
-          <md-option ng-value="key" ng-repeat="(key, theme) in vm.themes">{{ theme }}</md-option>
-        </md-select>
-      </md-input-container>
-      <md-input-container flex>
-        <label>Niveau</label>
-        <md-select placeholder="Niveau" ng-model="vm.qcmSelect.level" ng-change="vm.updateState()">
-          <md-option ng-value="key" ng-repeat="(key, level) in vm.levels">{{ level }}</md-option>
-        </md-select>
-      </md-input-container>
-    </div>
-
-    <ui-view></ui-view>
-  </div>
+<div layout="row" layout-align="space-between center">
+  <md-input-container flex>
+    <label>Thème</label>
+    <md-select placeholder="Theme" ng-model="$ctrl.qcmSelect.theme" ng-change="$ctrl.onChange({ selection: $ctrl.qcmSelect })">
+      <md-option ng-value="key" ng-repeat="(key, theme) in themes track by $index">{{ theme }}</md-option>
+    </md-select>
+  </md-input-container>
+  <md-input-container flex>
+    <label>Niveau</label>
+    <md-select placeholder="Niveau" ng-model="$ctrl.qcmSelect.level" ng-change="$ctrl.onChange({ selection: $ctrl.qcmSelect })">
+      <md-option ng-value="key" ng-repeat="(key, level) in levels track by $index">{{ level }}</md-option>
+    </md-select>
+  </md-input-container>
 </div>

@@ -12,25 +12,9 @@ angular.module("qcm")
     {
       name: "qcm",
       url: "/admin/qcm",
-      templateUrl: "/templates/qcm-select.html",
-      controller: function($scope: ng.IScope, fbQcmThemes: AngularFireObject, fbQcmLevels: AngularFireObject, $state: ng.ui.IStateService, $stateParams: IQcmEditStateParamsService, qcmSelect) {
-        this.themes = fbQcmThemes;
-        this.levels = fbQcmLevels;
-        this.qcmSelect = qcmSelect;
-
-        this.updateState = function() {
-          $state.go(".", qcmSelect);
-        };
-      },
-      controllerAs: "vm",
-      resolve: {
-        fbQcmThemes: function($firebaseObject: AngularFireObjectService) {
-          return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/themes")).$loaded();
-        },
-        fbQcmLevels: function($firebaseObject: AngularFireObjectService) {
-          return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/levels")).$loaded();
-        }
-      }
+      template: "<div layout=\"row\">" +
+      "<div class=\"flex-66\" flex-offset=\"20\">" +
+      "<ui-view></ui-view></div></div>"
     }
   )
   .state(
@@ -38,10 +22,6 @@ angular.module("qcm")
       name: "qcm.list",
       url: "/list?:theme&:level",
       templateUrl: "/templates/qcm-list.html",
-      controller: function(qcmList: AngularFireObject) {
-        this.qcmList = qcmList;
-      },
-      controllerAs: "vm",
       resolve: {
         qcmList: function($stateParams: IQcmEditStateParamsService, $firebaseObject: AngularFireObjectService) {
           return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/qcm")).$loaded();
@@ -53,25 +33,50 @@ angular.module("qcm")
     {
       name: "qcm.edit",
       url: "/edit?:theme&:level",
-      template: "<qcm-form qcm=\"vm.qcm\" on-submit=\"vm.save()\" ng-if=\"vm.qcmSelect.theme && vm.qcmSelect.level\"></qcm-form>",
-      controller: function(qcm: AngularFireObject, $scope: ng.IScope, qcmSelect) {
-        this.qcmSelect = qcmSelect;
-        this.qcm = qcm;
-        this.saving = false;
-        this.save = () => {
-          this.saving = true;
-          this.qcm.$save().then(() => { this.saving = false; });
+      /*params: {
+        theme: undefined,
+        level: undefined
+      },*/
+      template: "<qcm-select on-change=\"$ctrl.updateState(selection)\"></qcm-select>" +
+      "<qcm-form qcm=\"$resolve.qcm\" on-submit=\"$ctrl.save(qcm)\" ng-if=\"$resolve.qcm\"></qcm-form>",
+      controller: function($state: ng.ui.IStateService, $mdToast) {
+        this.save = (qcm) => {
+          qcm.$save().then(() => {
+            $mdToast.showSimple("Questionnaire sauvé.");
+          });
+        };
+        this.updateState = function(selection) {
+          $state.go(".", selection);
         };
       },
-      controllerAs: "vm",
+      controllerAs: "$ctrl",
       resolve: {
-        qcm: function($firebaseObject: AngularFireObjectService, $stateParams: IQcmEditStateParamsService, qcmSelect) {
-          return $firebaseObject(new Firebase(`https://qcm-whitedev.firebaseio.com/qcm/${qcmSelect.theme}/${qcmSelect.level}`));
+        qcm: function($firebaseObject: AngularFireObjectService, $stateParams: IQcmEditStateParamsService) {
+          return $firebaseObject(new Firebase(`https://qcm-whitedev.firebaseio.com/qcm/${$stateParams.theme}/${$stateParams.level}`)).$loaded();
         }
       }
     }
   );
 })
+.component(
+  "qcmSelect",
+  {
+    templateUrl: "/templates/qcm-select.html",
+    bindings: {
+      onChange: "&"
+    },
+    controller: function($scope: ng.IScope, $firebaseObject: AngularFireObjectService, $stateParams: IQcmEditStateParamsService) {
+      this.$onInit = () => {
+        $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/themes")).$bindTo($scope, "themes");
+        $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/levels")).$bindTo($scope, "levels");
+        this.qcmSelect = {
+          theme: $stateParams.theme,
+          level: $stateParams.level
+        };
+      };
+    }
+  }
+)
 .component(
   "qcmForm",
   {
@@ -102,12 +107,4 @@ angular.module("qcm")
       };
     }
   }
-)
-.run(function($rootScope: ng.IRootScopeService, $state: ng.ui.IStateService, $stateParams: IQcmEditStateParamsService, qcmSelect) {
-  $rootScope.$on("$stateChangeSuccess", function() {
-    if ($state.includes("qcm")) {
-      qcmSelect.theme = $stateParams.theme;
-      qcmSelect.level = $stateParams.level;
-    }
-  });
-});
+);

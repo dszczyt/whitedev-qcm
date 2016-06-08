@@ -4,33 +4,14 @@ angular.module("qcm")
         .state({
         name: "qcm",
         url: "/admin/qcm",
-        templateUrl: "/templates/qcm-select.html",
-        controller: function ($scope, fbQcmThemes, fbQcmLevels, $state, $stateParams, qcmSelect) {
-            this.themes = fbQcmThemes;
-            this.levels = fbQcmLevels;
-            this.qcmSelect = qcmSelect;
-            this.updateState = function () {
-                $state.go(".", qcmSelect);
-            };
-        },
-        controllerAs: "vm",
-        resolve: {
-            fbQcmThemes: function ($firebaseObject) {
-                return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/themes")).$loaded();
-            },
-            fbQcmLevels: function ($firebaseObject) {
-                return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/levels")).$loaded();
-            }
-        }
+        template: "<div layout=\"row\">" +
+            "<div class=\"flex-66\" flex-offset=\"20\">" +
+            "<ui-view></ui-view></div></div>"
     })
         .state({
         name: "qcm.list",
         url: "/list?:theme&:level",
         templateUrl: "/templates/qcm-list.html",
-        controller: function (qcmList) {
-            this.qcmList = qcmList;
-        },
-        controllerAs: "vm",
         resolve: {
             qcmList: function ($stateParams, $firebaseObject) {
                 return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/qcm")).$loaded();
@@ -40,24 +21,42 @@ angular.module("qcm")
         .state({
         name: "qcm.edit",
         url: "/edit?:theme&:level",
-        template: "<qcm-form qcm=\"vm.qcm\" on-submit=\"vm.save()\" ng-if=\"vm.qcmSelect.theme && vm.qcmSelect.level\"></qcm-form>",
-        controller: function (qcm, $scope, qcmSelect) {
-            var _this = this;
-            this.qcmSelect = qcmSelect;
-            this.qcm = qcm;
-            this.saving = false;
-            this.save = function () {
-                _this.saving = true;
-                _this.qcm.$save().then(function () { _this.saving = false; });
+        template: "<qcm-select on-change=\"$ctrl.updateState(selection)\"></qcm-select>" +
+            "<qcm-form qcm=\"$resolve.qcm\" on-submit=\"$ctrl.save(qcm)\" ng-if=\"$resolve.qcm\"></qcm-form>",
+        controller: function ($state, $mdToast) {
+            this.save = function (qcm) {
+                qcm.$save().then(function () {
+                    $mdToast.showSimple("Questionnaire sauvé.");
+                });
+            };
+            this.updateState = function (selection) {
+                $state.go(".", selection);
             };
         },
-        controllerAs: "vm",
+        controllerAs: "$ctrl",
         resolve: {
-            qcm: function ($firebaseObject, $stateParams, qcmSelect) {
-                return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/qcm/" + qcmSelect.theme + "/" + qcmSelect.level));
+            qcm: function ($firebaseObject, $stateParams) {
+                return $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/qcm/" + $stateParams.theme + "/" + $stateParams.level)).$loaded();
             }
         }
     });
+})
+    .component("qcmSelect", {
+    templateUrl: "/templates/qcm-select.html",
+    bindings: {
+        onChange: "&"
+    },
+    controller: function ($scope, $firebaseObject, $stateParams) {
+        var _this = this;
+        this.$onInit = function () {
+            $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/themes")).$bindTo($scope, "themes");
+            $firebaseObject(new Firebase("https://qcm-whitedev.firebaseio.com/levels")).$bindTo($scope, "levels");
+            _this.qcmSelect = {
+                theme: $stateParams.theme,
+                level: $stateParams.level
+            };
+        };
+    }
 })
     .component("qcmForm", {
     templateUrl: "/templates/qcm-form.html",
@@ -85,13 +84,5 @@ angular.module("qcm")
             question.answers.push({});
         };
     }
-})
-    .run(function ($rootScope, $state, $stateParams, qcmSelect) {
-    $rootScope.$on("$stateChangeSuccess", function () {
-        if ($state.includes("qcm")) {
-            qcmSelect.theme = $stateParams.theme;
-            qcmSelect.level = $stateParams.level;
-        }
-    });
 });
 //# sourceMappingURL=new_qcm.directive.js.map
